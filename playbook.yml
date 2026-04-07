@@ -1,0 +1,38 @@
+---
+- name: Install and configure Nginx on AWS EC2 Ubuntu
+  hosts: webserver
+  become: true
+  gather_facts: true
+
+  vars:
+    test_page_src: "./app/index.html"
+    test_page_dest: "/var/www/html/index.html"
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Ensure nginx is running and enabled
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Deploy test index.html
+      copy:
+        src: "{{ test_page_src }}"
+        dest: "{{ test_page_dest }}"
+        owner: www-data
+        group: www-data
+        mode: "0644"
+
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted
