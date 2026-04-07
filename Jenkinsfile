@@ -2,13 +2,7 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
+        
         stage ('Checkout') {
             steps {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], 
